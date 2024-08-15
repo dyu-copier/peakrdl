@@ -1,0 +1,16 @@
+project_name:
+  type: str
+  help: The name should be peakrdl_<function> (note underscore)
+project_short_desc:
+  type: str
+  help: short description
+project_long_desc:
+  type: str
+  help: long description
+author:
+  type: str
+  help: Author
+email:
+  type: str
+  help: email
+

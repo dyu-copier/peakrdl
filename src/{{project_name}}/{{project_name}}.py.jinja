@@ -1,0 +1,74 @@
+import sys
+from pprint import PrettyPrinter
+from systemrdl import RDLCompiler, RDLWalker
+
+
+from systemrdl import RDLListener
+from systemrdl.node import FieldNode, RegNode, AddressableNode
+
+'''
+# {{project_name}}
+... Put your documentation here ...
+'''
+
+class HexPP(PrettyPrinter):
+    ''' I prefer numbers to be in hex format grouped by 4. This class is a helper for that. '''
+    def format(self,object,context,maxlevels,level):
+        if isinstance(object, int):
+            return '0x{:_X}'.format(object), True, False
+        return super().format(object, context, maxlevels, level)
+
+# Define a listener that will print out the register model hierarchy
+class {{project_name.split('-')|map('capitalize')|join}}(RDLListener):
+    def __init__(self,file):
+        self.file=file
+        # Put the standard header for your code file here.
+        print(f'''
+              ''',file=file)
+
+    def enter_Addrmap(self,node):
+        ''' Initialize your per addressmap variables here '''
+        pass
+
+    def enter_Reg(self,node):
+        ''' Initialize your per Register variables here '''
+        pass
+
+    def enter_Field(self,node):
+        ''' Initialize your per Register variables here '''
+        if not node.is_sw_writable:
+            pass
+        if   not node.is_sw_readable:
+            pass
+        pass
+    def exit_Reg(self,node):
+        ''' Finalize your variables '''
+        if not node.has_sw_writable:
+            pass
+        if   not node.has_sw_readable:
+            pass
+        pass
+
+    def exit_Addrmap(self,node):
+        '''
+        Printout the formatted variables to the file
+        use HexPP to convert variables to hex.
+        e.g. preg=HexPP().pformat(self.registers)
+        '''
+        print(f'''
+            ''',file=self.file)
+
+
+if __name__ == "__main__":
+    input_files = sys.argv[1:]
+    rdlc = RDLCompiler()
+    try:
+        for input_file in input_files:
+            rdlc.compile_file(input_file)
+            root = rdlc.elaborate()
+    except:
+        sys.exit(1)
+    walker = RDLWalker(unroll=True)
+    with open('out.txt','w') as of:
+        listener = {{project_name.split('-')|map('capitalize')|join}}(of)
+        walker.walk(root, listener)

@@ -1,0 +1,39 @@
+"""PeakRDL {{project_name}} exporter."""
+import os
+__authors__ =[
+        '{{author}}',
+        ]
+from typing import List, Optional, Union
+import sys
+
+from systemrdl.node import (  # type: ignore
+    AddrmapNode,
+    RootNode,
+)
+
+from systemrdl import RDLCompiler, RDLWalker
+from .{{project_name}} import {{project_name.split('-')|map('capitalize')|join}}
+
+
+class {{project_name.split('-')|map('capitalize')|join}}Exporter:  # pylint: disable=too-few-public-methods
+    """PeakRDL {{project__name}} exporter main class."""
+
+    def export(self,
+               top_node: Union[AddrmapNode, RootNode],
+               outputpath: str,
+               input_files: Optional[List[str]] = None,
+               rename: Optional[str] = None,
+               depth: int = 0,
+               ):
+        print(f"{top_node.inst.inst_name} Reading {input_files} Output to {outputpath}")
+        rdlc = RDLCompiler()
+        try:
+            for input_file in input_files:
+                rdlc.compile_file(input_file)
+                root=rdlc.elaborate()
+        except:
+            sys.exit()
+        with open(os.path.join(outputpath,top_node.inst.inst_name+"_{{project_name}}.py"),'w') as file:
+            walker=RDLWalker(unroll=True)
+            listener={{project_name.split('-')|map('capitalize')|join}}(file)
+            walker.walk(root,listener)
