@@ -1,6 +1,12 @@
+#Questions
+function_name:
+  type: str
+  help: function_name -- This will be invoked as "peakrdl <function_name>   file.rdl -o ..."
+
 project_name:
   type: str
-  help: The name should be peakrdl_<function> (note underscore)
+  default: peakrdl_{{function_name}}
+  help: ProjectName-- The ProjectName should be peakrdl_<function> (note underscore)
 project_short_desc:
   type: str
   help: short description
